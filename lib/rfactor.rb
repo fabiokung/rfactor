@@ -6,4 +6,4 @@ module Rfactor
 end
 
 require 'rubygems'
-require 'parse_tree'
+require 'ruby_parser'

@@ -9,7 +9,7 @@ $hoe = Hoe.new('rfactor', Rfactor::VERSION) do |p|
   p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
   p.rubyforge_name       = p.name # TODO this is default value
   p.extra_deps         = [
-    ['ParseTree','>= 3.0.2']
+    ['ruby_parser','>= 2.0.1']
   ]
   p.extra_dev_deps = [
     ['newgem', ">= #{::Newgem::VERSION}"]
