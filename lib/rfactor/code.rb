@@ -19,17 +19,17 @@ module Rfactor
       added = false
       identation = 0
       
-      @code.each_with_index do |line, number|
-        if number + 1 == method_lines.first
-          spaces = line.match /^(\s*)def/
-          identation = spaces.captures[0]
+      @code.each_with_index do |line, n|
+        line_number = n + 1 # not 0-based
+        if line_number == method_lines.first
+          identation = extract_identation_level_from line
           extracted_method << "\n\n#{identation}"
           extracted_method << "def #{args[:name]}()\n"
         end
-        if selected_lines.include? number+1
-          new_code << "#{identation}  #{args[:name]}()\n" if number+1 == selected_lines.first
+        if selected_lines.include? line_number
+          new_code << "#{identation}  #{args[:name]}()\n" if line_number == selected_lines.first
           extracted_method << line
-        elsif number+1 > method_lines.last && !added
+        elsif line_number > method_lines.last && !added
           added = true
           new_code << extracted_method << "end\n"
         else
@@ -38,6 +38,12 @@ module Rfactor
       end
       new_code << extracted_method << "#{identation}end\n" unless added
       new_code
+    end
+    
+    private
+    def extract_identation_level_from(line)
+      spaces = line.match /^(\s*)def/
+      spaces.captures[0]
     end
     
   end
