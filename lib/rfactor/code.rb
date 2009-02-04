@@ -10,8 +10,10 @@ module Rfactor
     
     def extract_method(args)
       raise ":name is required" unless args.has_key?(:name)
+      
       method_lines = @line_finder.method_lines(args[:start])
       selected_lines = Range.new(args[:start], args[:end])
+      
       new_code = ""
       extracted_method = ""
       added = false
@@ -24,8 +26,8 @@ module Rfactor
           extracted_method << "\n\n#{identation}"
           extracted_method << "def #{args[:name]}()\n"
         end
-        if selected_lines.include?(number+1)
-          new_code << "#{args[:name]}()\n" if number == method_lines.first
+        if selected_lines.include? number+1
+          new_code << "#{identation}  #{args[:name]}()\n" if number+1 == selected_lines.first
           extracted_method << line
         elsif number+1 > method_lines.last && !added
           added = true
@@ -37,6 +39,6 @@ module Rfactor
       new_code << extracted_method << "#{identation}end\n" unless added
       new_code
     end
-        
+    
   end
 end

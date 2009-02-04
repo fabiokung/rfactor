@@ -20,6 +20,7 @@ Feature: Extract Method
       """
         def the_method(firstArg, secondArg)
           puts "some"
+          other_method()
         end
 
         def other_method()
