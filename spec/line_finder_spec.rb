@@ -12,7 +12,6 @@ class Bla
     puts "anything"
   end
 end
-
 END
 
 describe Rfactor::LineFinder do
