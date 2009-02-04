@@ -1,32 +1,52 @@
 = rfactor
 
-* FIX (url)
+http://github.com/fabiokung/rfactor/wiki
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Common refactorings for Ruby code, written in Ruby. This project aims 
+to be integrated with several editors (mainly TextMate), to provide 
+simple refactorings, such as:
+
+* extract method
+* extract Class
+* extract Module
+* rename using ack
+* move using ack
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* Uses {RubyParser}[http://parsetree.rubyforge.org] to extract ASTs
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  code = Rfactor::Code.new(CODE)
+  new_code = code.extract_method :name => 'new_method',
+      :start => 10,
+      :end => 15
+  # new_code should contain the changed code with content in lines 
+  # between 10 and 15 extracted to the method called new_method
+
+See the features (Cucumber) dir for more examples.
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* ParseTree
+* modified ruby_parser, from fabiokung's github repository
+* modified sexp_processor, from fabiokung's github repository
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* gem install ParseTree
+* gem install fabiokung-sexp_processor -s http://gems.github.com
+* gem install fabiokung-ruby_parser -s http://gems.github.com
+* gem install fabiokung-rfactor -s http://gems.github.com
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2008 Fabio Kung
+Copyright (c) 2008 Fabio Kung <fabio.kung@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
