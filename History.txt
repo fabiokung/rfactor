@@ -1,4 +1,6 @@
-== 0.0.1 2008-11-25
+== 0.0.1 2009-02-04
 
-* 1 major enhancement:
-  * Initial release
+* basic extract method support:
+  * for code inside methods
+  * without identifying method parameters
+  * without getting method return
