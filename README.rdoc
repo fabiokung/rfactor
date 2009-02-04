@@ -1,6 +1,6 @@
 = rfactor
 
-http://github.com/fabiokung/rfactor/wiki
+http://wiki.github.com/fabiokung/rfactor
 
 == DESCRIPTION:
 
@@ -21,26 +21,26 @@ simple refactorings, such as:
 == SYNOPSIS:
 
   code = Rfactor::Code.new(CODE)
-  new_code = code.extract_method :name => 'new_method',
+  new_code = code.extract_method :name => 'common_behavior',
       :start => 10,
       :end => 15
-  # new_code should contain the changed code with content in lines 
-  # between 10 and 15 extracted to the method called new_method
+  # new_code should contain the changed code. The content between 
+  # lines 10 and 15 are extracted to the new method called common_behavior
 
-See the features (Cucumber) dir for more examples.
+See the features (Cucumber) directory for more examples.
 
 == REQUIREMENTS:
 
 * ParseTree
-* modified ruby_parser, from fabiokung's github repository
-* modified sexp_processor, from fabiokung's github repository
+* modified ruby_parser, from [fabiokung's github repository](http://github.com/fabiokung/ruby_parser/tree/master)
+* modified sexp_processor, from [fabiokung's github repository](http://github.com/fabiokung/sexp_processor/tree/master)
 
 == INSTALL:
 
-* gem install ParseTree
-* gem install fabiokung-sexp_processor -s http://gems.github.com
-* gem install fabiokung-ruby_parser -s http://gems.github.com
-* gem install fabiokung-rfactor -s http://gems.github.com
+  gem install ParseTree
+  gem install fabiokung-sexp_processor -s http://gems.github.com
+  gem install fabiokung-ruby_parser -s http://gems.github.com
+  gem install fabiokung-rfactor -s http://gems.github.com
 
 == LICENSE:
 
