@@ -5,7 +5,7 @@ module Rfactor
     def initialize(code)
       @code = code
       @ast = RubyParser.new.parse(code)
-      @line_finder = LineFinder.new(@ast, code.last_line)
+      @line_finder = LineFinder.new(@ast)
     end
     
     def extract_method(args)
@@ -23,7 +23,7 @@ module Rfactor
         line_number = n + 1 # not 0-based
         if line_number == method_lines.first
           identation = extract_identation_level_from line
-          extracted_method << "\n\n#{identation}"
+          extracted_method << "\n#{identation}"
           extracted_method << "def #{args[:name]}()\n"
         end
         if selected_lines.include? line_number
@@ -31,12 +31,13 @@ module Rfactor
           extracted_method << line
         elsif line_number > method_lines.last && !added
           added = true
-          new_code << extracted_method << "end\n"
+          new_code << extracted_method << "#{identation}end\n"
+          new_code << line
         else
           new_code << line
         end
       end
-      new_code << extracted_method << "#{identation}end\n" unless added
+      new_code << "\n#{extracted_method}#{identation}end\n" unless added
       new_code
     end
     

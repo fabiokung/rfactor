@@ -18,19 +18,19 @@ describe Rfactor::LineFinder do
   
   before(:each) do
     @ast = RubyParser.new.parse(CODE)
-    @finder = Rfactor::LineFinder.new(@ast, CODE.last_line)
+    @finder = Rfactor::LineFinder.new(@ast)
   end
   
   it "should find method start line" do
     @finder.method_lines(3).first.should == 2
   end
   
-  it "should use next method line as last line" do
-    @finder.method_lines(3).last.should == 8
+  it "should find method end line" do
+    @finder.method_lines(3).last.should == 6
   end
   
-  it "should use file last line if position is last method method" do
-    @finder.method_lines(9).last.should == 11
+  it "it should find method end line even if the method is the last" do
+    @finder.method_lines(9).last.should == 10
   end
   
 end

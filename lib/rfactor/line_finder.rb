@@ -2,15 +2,14 @@ module Rfactor
 
   class LineFinder
     
-    def initialize(ast, last_line)
+    def initialize(ast)
       @ast = ast
-      @last_line = last_line
     end
     
     def method_lines(line_in_code)
       processor = MethodLineFinderProcessor.new(line_in_code)
       processor.process(@ast)
-      Range.new(processor.method_line, processor.last_method_line || @last_line, true)
+      Range.new(processor.method_line, processor.last_method_line)
     end
   end
   
@@ -27,18 +26,14 @@ module Rfactor
       @last_method_line = 0
     end
     
-    def process_defn(exp, next_exp)
+    def process_defn(exp)
       current = exp.line
       if current > @method_line && current < @line
         @method_line = current
-        @last_method_line = next_exp.line if next_exp
+        @last_method_line = exp.endline
       end
       exp
-    end
-    
-    def last_method_line
-      @last_method_line if @last_method_line > @method_line
-    end
+    end    
   end
 
 end
