@@ -37,6 +37,12 @@ See the features (Cucumber) directory for more examples.
 
 == INSTALL:
 
+All you need is installed automatically by rubygems:
+
+  sudo gem install fabiokung-rfactor -s http://gems.github.com
+  
+But, if you need, here are the required gems individually:
+  
   gem install ParseTree
   gem install fabiokung-sexp_processor -s http://gems.github.com
   gem install fabiokung-ruby_parser -s http://gems.github.com
