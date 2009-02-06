@@ -2,15 +2,27 @@ module Rfactor
   
   class Code
     
+    # code: String with code to be refactored
     def initialize(code)
       @code = code
-      @ast = RubyParser.new.parse(code)
       @line_finder = LineFinder.new(@ast)
     end
     
+    # == Required arguments
+    #
+    # You must pass them inside a Hash:
+    #
+    # * :name => 'the new method name'
+    # * :start => line number where the code to be extracted starts
+    # * :end => line number where the code to be extracted ends
+    #
+    # == Example
+    #
+    #   code.extract_method :name => 'common_code', :start => 3, :end => 7
     def extract_method(args)
       raise ":name is required" unless args.has_key?(:name)
       
+      ast = RubyParser.new.parse(code)
       method_lines = @line_finder.method_lines(args[:start])
       selected_lines = Range.new(args[:start], args[:end])
       
@@ -19,7 +31,7 @@ module Rfactor
       added = false
       identation = 0
       
-      @code.each_with_index do |line, n|
+      code.each_with_index do |line, n|
         line_number = n + 1 # not 0-based
         if line_number == method_lines.first
           identation = extract_identation_level_from line
