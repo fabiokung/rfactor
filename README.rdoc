@@ -2,10 +2,6 @@
 
 http://wiki.github.com/fabiokung/rfactor
 
-== RDoc
-
-http://fabiokung.github.com/rfactor
-
 == DESCRIPTION:
 
 Common refactorings for Ruby code, written in Ruby. This project aims 
@@ -52,6 +48,10 @@ But, if you need, here are the required gems individually:
   gem install fabiokung-sexp_processor -s http://gems.github.com
   gem install fabiokung-ruby_parser -s http://gems.github.com
   gem install fabiokung-rfactor -s http://gems.github.com
+
+== RDoc
+
+http://fabiokung.github.com/rfactor
 
 == LICENSE:
 
