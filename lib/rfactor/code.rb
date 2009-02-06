@@ -5,7 +5,6 @@ module Rfactor
     # code: String with code to be refactored
     def initialize(code)
       @code = code
-      @line_finder = LineFinder.new(@ast)
     end
     
     # == Required arguments
@@ -23,7 +22,9 @@ module Rfactor
       raise ":name is required" unless args.has_key?(:name)
       
       ast = RubyParser.new.parse(code)
-      method_lines = @line_finder.method_lines(args[:start])
+      line_finder = LineFinder.new(ast)
+      
+      method_lines = line_finder.method_lines(args[:start])
       selected_lines = Range.new(args[:start], args[:end])
       
       new_code = ""
