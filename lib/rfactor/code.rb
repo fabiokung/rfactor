@@ -21,7 +21,7 @@ module Rfactor
     def extract_method(args)
       raise ":name is required" unless args.has_key?(:name)
       
-      ast = RubyParser.new.parse(code)
+      ast = RubyParser.new.parse(@code)
       line_finder = LineFinder.new(ast)
       
       method_lines = line_finder.method_lines(args[:start])
@@ -32,7 +32,7 @@ module Rfactor
       added = false
       identation = 0
       
-      code.each_with_index do |line, n|
+      @code.each_with_index do |line, n|
         line_number = n + 1 # not 0-based
         if line_number == method_lines.first
           identation = extract_identation_level_from line
