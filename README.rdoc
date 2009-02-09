@@ -9,6 +9,7 @@ to be integrated with several editors (mainly TextMate), to provide
 simple refactorings, such as:
 
 * extract method
+* extract variable
 * extract Class
 * extract Module
 * rename using ack
