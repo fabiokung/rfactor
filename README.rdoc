@@ -2,6 +2,10 @@
 
 http://wiki.github.com/fabiokung/rfactor
 
+== Issue Tracking
+
+http://fabiokung.lighthouseapp.com/projects/27963-rfactor
+
 == DESCRIPTION:
 
 Common refactorings for Ruby code, written in Ruby. This project aims 
