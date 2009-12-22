@@ -58,13 +58,55 @@ module Rfactor
       new_code
     end
 
+    # == Required arguments
+    #
+    # You must pass them inside a Hash:
+    #
+    # * :name => 'the new variable name'
+    # * :text => what to be extracted to the variable
+    # * :line => line number where the variable to be extracted is
+    #
+    # == Example
+    #
+    #   code.extract_variable :name => 'common_code', :text => "'string'", :line => 3
+    def extract_variable(args)
+      raise ":name is required" unless args.has_key?(:name)
+      
+      ast = RubyParser.new.parse(@code)
+      line_finder = LineFinder.new(ast)
+      
+      method_lines = line_finder.method_lines(args[:line])
+      
+      new_code = ""
+      added = false
+      identation = 0
+      
+      @code.each_with_index do |line, n|
+        line_number = n + 1 # not 0-based
+        if line_number == method_lines.first
+          identation = extract_identation_level_from line
+        end
+        if line_number == method_lines.first + 1
+          new_code << "#{identation}  #{args[:name]} = #{args[:text]}\n"
+        end
+        if method_lines.include? line_number
+          new_line = line.gsub(args[:text], args[:name])
+          new_code << new_line
+        else
+          new_code << line
+        end
+      end
+      new_code
+    end
+    
+    private
+    
     def assignment_value(method_contents)
       last_instruction = method_contents.split("\n")[-1]
       is_assignment = remove_constants(last_instruction).match(/\s*(#{VALID_NAME})\s*=/)
       $1
     end
         
-    private
     def raise_error_if_absent(arguments, keys)
       keys.each do |key|
         raise ":#{key} is required" unless arguments.has_key?(key.to_sym)
