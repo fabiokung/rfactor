@@ -2,12 +2,12 @@ module Rfactor
   
   class Code
     
-    # code: String with code to be refactored
+    ### code: String with code to be refactored
     def initialize(code)
       @code = code
     end
     
-    # == Required arguments
+    ### == Required arguments
     #
     # You must pass them inside a Hash:
     #
@@ -19,13 +19,12 @@ module Rfactor
     #
     #   code.extract_method :name => 'common_code', :start => 3, :end => 7
     def extract_method(args)
-      raise ":name is required" unless args.has_key?(:name)
+      raise_error_if_absent(args, ["name", "start", "end"])
       
-      ast = RubyParser.new.parse(@code)
-      line_finder = LineFinder.new(ast)
-      
-      method_lines = line_finder.method_lines(args[:start])
+      method_lines = extract_method_lines(args[:start])
       selected_lines = Range.new(args[:start], args[:end])
+      method_contents = extract_method_contents(selected_lines)
+      puts "#{method_contents}"
       
       new_code = ""
       extracted_method = ""
@@ -33,7 +32,7 @@ module Rfactor
       identation = 0
       
       @code.each_with_index do |line, n|
-        line_number = n + 1 # not 0-based
+        line_number = n + 1 ### not 0-based
         if line_number == method_lines.first
           identation = extract_identation_level_from line
           extracted_method << "\n#{identation}"
@@ -55,10 +54,31 @@ module Rfactor
     end
     
     private
+    def raise_error_if_absent(arguments, keys)
+      keys.each do |key|
+        raise ":#{key} is required" unless arguments.has_key?(key.to_sym)
+      end
+    end
+    
+    def extract_method_lines(starting_line)
+      ast = RubyParser.new.parse(@code)
+      line_finder = LineFinder.new(ast)
+      line_finder.method_lines(starting_line)
+    end
+    
+    def extract_method_contents(selected_lines)
+      method_contents = ""
+      @code.each_with_index do |line, n|
+        line_number = n + 1 ### not 0-based
+        method_contents << line if selected_lines.include? line_number
+      end
+      method_contents
+    end
+    
     def extract_identation_level_from(line)
       spaces = line.match /^(\s*)def/
       spaces.captures[0]
-    end
-    
+    end    
   end
 end
+
