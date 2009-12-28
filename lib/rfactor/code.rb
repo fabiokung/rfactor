@@ -24,8 +24,11 @@ module Rfactor
       method_lines = extract_method_lines(args[:start])
       selected_lines = Range.new(args[:start], args[:end])
       method_contents = extract_method_contents(selected_lines)
-      puts "#{method_contents}"
+      parameters = extract_parameters(method_contents)
+      method_call = "#{args[:name]}(#{parameters.join(', ')})"
+      unindented_new_method_code = "def #{method_call}\n#{method_contents}\nend\n"
       
+      new_method_code = ""
       new_code = ""
       extracted_method = ""
       added = false
@@ -35,21 +38,19 @@ module Rfactor
         line_number = n + 1 ### not 0-based
         if line_number == method_lines.first
           identation = extract_identation_level_from line
-          extracted_method << "\n#{identation}"
-          extracted_method << "def #{args[:name]}()\n"
+          new_method_code = indent(unindented_new_method_code)
         end
         if selected_lines.include? line_number
-          new_code << "#{identation}  #{args[:name]}()\n" if line_number == selected_lines.first
-          extracted_method << line
+          new_code << "#{identation}  #{method_call}\n" if line_number == selected_lines.first
         elsif line_number > method_lines.last && !added
           added = true
-          new_code << extracted_method << "#{identation}end\n"
+          new_code << new_method_code
           new_code << line
         else
           new_code << line
         end
       end
-      new_code << "\n#{extracted_method}#{identation}end\n" unless added
+      new_code << new_method_code unless added
       new_code
     end
     
@@ -69,7 +70,7 @@ module Rfactor
     def extract_method_contents(selected_lines)
       method_contents = ""
       @code.each_with_index do |line, n|
-        line_number = n + 1 ### not 0-based
+        line_number = n + 1 # not 0-based
         method_contents << line if selected_lines.include? line_number
       end
       method_contents
@@ -78,7 +79,11 @@ module Rfactor
     def extract_identation_level_from(line)
       spaces = line.match /^(\s*)def/
       spaces.captures[0]
-    end    
+    end
+    
+    def extract_parameters(method_contents)
+      []
+    end
   end
 end
 

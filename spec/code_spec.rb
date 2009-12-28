@@ -17,7 +17,7 @@ describe Rfactor::Code do
       lambda { @rfactor.extract_method({:name => "b", :start => 3}) }.should raise_error(":end is required")
     end
     
-    it "should extract all document if start and end are greater than limits" do
+    it "should accept start and ends beyond boundaries" do
       lambda { @rfactor.extract_method({:name => "b", :start => 0, :end => 3}) }.should_not raise_error
     end
   end
