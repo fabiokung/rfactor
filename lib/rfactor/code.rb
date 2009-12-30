@@ -1,7 +1,7 @@
+VARIABLE_DEFINITION=/(\w[\w_\d\?]*)[^(?:\()(?: \w)]/
+
 module Rfactor
-  
   class Code
-    
     ### code: String with code to be refactored
     def initialize(code)
       @code = code
@@ -26,31 +26,30 @@ module Rfactor
       method_contents = extract_method_contents(selected_lines)
       parameters = extract_parameters(method_contents)
       method_call = "#{args[:name]}(#{parameters.join(', ')})"
-      unindented_new_method_code = "def #{method_call}\n#{method_contents}\nend\n"
       
-      new_method_code = ""
       new_code = ""
-      extracted_method = ""
-      added = false
-      identation = 0
+      identation = ""
       
       @code.each_with_index do |line, n|
         line_number = n + 1 ### not 0-based
         if line_number == method_lines.first
           identation = extract_identation_level_from line
-          new_method_code = indent(unindented_new_method_code)
         end
-        if selected_lines.include? line_number
-          new_code << "#{identation}  #{method_call}\n" if line_number == selected_lines.first
-        elsif line_number > method_lines.last && !added
-          added = true
-          new_code << new_method_code
-          new_code << line
-        else
-          new_code << line
+        if line_number == selected_lines.first
+          new_code << "#{identation}  "
+          
+          last_instruction = method_contents.split("\n")[-1]
+          is_assignment = last_instruction.gsub(/".*"/, "").match(/\s*(\w[\w_\d\?]*)\s*=/)
+          new_code << "#{$1} = " if is_assignment
+          
+          new_code << "#{method_call}\n"
+        elsif line_number == method_lines.last + 1
+          new_code << "\n#{identation}def #{method_call}\n#{method_contents}#{identation}end\n"
         end
+          
+        new_code << line unless selected_lines.include? line_number
       end
-      new_code << new_method_code unless added
+      new_code << new_method_code unless method_lines.last < @code.size
       new_code
     end
     
@@ -82,7 +81,14 @@ module Rfactor
     end
     
     def extract_parameters(method_contents)
-      []
+      all_variables = method_contents.gsub(/".*"/, "").scan(VARIABLE_DEFINITION).flatten
+      all_variables.reject do |variable|
+        method_contents.match(/^\s*#{variable}\s*=/)
+      end
+    end
+    
+    def add_identation(identation, code)
+      code.gsub(/\n/, "\n#{identation}")
     end
   end
 end
