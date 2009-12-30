@@ -167,6 +167,26 @@ class Example
   end
 end"""
       end   
+
+      it "should extract the method with more than one parameter" do
+        new_code = @rfactor.extract_method({:name => "print_description", :start => 8, :end => 9})
+        new_code.should == """
+class Example
+  def long_method()
+    first_message = \"This is a long method\"
+    puts first_message
+    second_message = \"used to print a message\"
+    third_message = \"saying this is a long method\"
+    print_description(second_message, third_message)
+    puts \"but does nothing useful\"
+  end
+
+  def print_description(second_message, third_message)
+    puts second_message
+    puts third_message
+  end
+end"""
+      end   
     end
   end
 end
