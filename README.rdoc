@@ -12,7 +12,7 @@ Common refactorings for Ruby code, written in Ruby. This project aims
 to be integrated with several editors (mainly TextMate), to provide 
 simple refactorings, such as:
 
-* extract method
+* extract method -- only one available for now
 * extract variable
 * extract Class
 * extract Module
@@ -62,7 +62,7 @@ http://fabiokung.github.com/rfactor
 
 (The MIT License)
 
-Copyright (c) 2008 Fabio Kung <fabio.kung@gmail.com>
+Copyright (c) 2008 Fabio Kung <fabio.kung@gmail.com> and Hugo Corbucci <hugo.corbucci@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
