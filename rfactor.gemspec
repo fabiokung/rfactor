@@ -1,14 +1,15 @@
 # -*- encoding: utf-8 -*-
+require 'lib/rfactor'
 
 Gem::Specification.new do |s|
   s.name = %q{rfactor}
-  s.version = "0.0.2"
+  s.version = Rfactor::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Fabio Kung"]
-  s.date = %q{2009-02-05}
+  s.authors = ["Fabio Kung", "Hugo Corbucci"]
+  s.date = %q{2009-12-31}
   s.description = %q{Common refactorings for Ruby code, written in Ruby. This project aims  to be integrated with several editors (mainly TextMate), to provide  simple refactorings, such as:  * extract method * extract Class * extract Module * rename using ack * move using ack}
-  s.email = ["fabio.kung@gmail.com"]
+  s.email = ["fabio.kung@gmail.com", "hugo.corbucci@gmail.com"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "PostInstall.txt", "README.rdoc"]
   s.files = ["History.txt", "Manifest.txt", "PostInstall.txt", "README.rdoc", "Rakefile", "features/development.feature", "features/extract_method.feature", "features/steps/code_steps.rb", "features/steps/common.rb", "features/steps/env.rb", "lib/rfactor.rb", "lib/rfactor/code.rb", "lib/rfactor/line_finder.rb", "lib/rfactor/string_ext.rb", "script/console", "script/destroy", "script/generate", "spec/code_spec.rb", "spec/line_finder_spec.rb", "spec/rfactor_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "spec/string_ext_spec.rb", "tasks/rspec.rake"]
   s.has_rdoc = true

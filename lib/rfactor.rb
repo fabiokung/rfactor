@@ -11,7 +11,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 #                :start => 3,
 #                :end => 5
 module Rfactor
-  VERSION = '0.0.2'
+  VERSION = '0.0.3'
 end
 
 require 'rubygems'
