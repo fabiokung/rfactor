@@ -44,13 +44,12 @@ module Rfactor
           new_code << "#{$1} = " if is_assignment
           
           new_code << "#{method_call}\n"
-        elsif line_number == method_lines.last + 1
-          new_code << "\n#{identation}def #{method_call}\n#{method_contents}#{identation}end\n"
+        elsif line_number == method_lines.last
+          new_code << "#{identation}end\n\n#{identation}def #{method_call}\n#{method_contents}"
         end
           
         new_code << line unless selected_lines.include? line_number
       end
-      new_code << new_method_code unless method_lines.last < @code.size
       new_code
     end
     

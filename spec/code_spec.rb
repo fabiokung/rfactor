@@ -45,6 +45,28 @@ describe Rfactor::Code do
     end
   end
   
+  it "should extract method and add it even if the method is the last thing of the code" do
+    rfactor = Rfactor::Code.new("""
+      def the_method(firstArg, secondArg)
+        puts \"some\"
+        puts :code
+        puts /to be/
+        puts 'refactored'
+      end""")
+    new_code = rfactor.extract_method(:name => "print", :start => 3, :end => 5)
+    new_code.should == """
+      def the_method(firstArg, secondArg)
+        print()
+        puts 'refactored'
+      end
+
+      def print()
+        puts \"some\"
+        puts :code
+        puts /to be/
+      end"""
+  end
+  
   context "no parameters method extraction" do
     before(:each) do
       @rfactor = Rfactor::Code.new(NO_PARAMETER_CODE)
