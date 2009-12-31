@@ -40,7 +40,7 @@ module Rfactor
           new_code << "#{identation}  "
           
           last_instruction = method_contents.split("\n")[-1]
-          is_assignment = last_instruction.gsub(/".*"/, "").match(/\s*(\w[\w_\d\?]*)\s*=/)
+          is_assignment = remove_constants(last_instruction).match(/\s*(#{VALID_NAME})\s*=/)
           new_code << "#{$1} = " if is_assignment
           
           new_code << "#{method_call}\n"

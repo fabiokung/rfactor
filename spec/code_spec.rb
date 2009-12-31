@@ -126,6 +126,32 @@ class Example
   end
 end"""
     end
+    
+    it "should ignore constants such as literal strings, strings, regexs and symbols" do
+      rfactor = Rfactor::Code.new("""
+class Example
+  def long_method()
+    puts \"This is a long method\"
+    puts /saying this is a long method/
+    puts :but_does_nothing_useful
+    puts 'used to = print a message'
+  end
+end""")
+      new_code = rfactor.extract_method({:name => "print_message", :start => 4, :end => 7})
+      new_code.should == """
+class Example
+  def long_method()
+    print_message()
+  end
+
+  def print_message()
+    puts \"This is a long method\"
+    puts /saying this is a long method/
+    puts :but_does_nothing_useful
+    puts 'used to = print a message'
+  end
+end"""
+    end
   end
   
   context "with parameters" do
