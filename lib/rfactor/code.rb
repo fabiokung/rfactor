@@ -1,4 +1,5 @@
-VARIABLE_DEFINITION=/(\w[\w_\d\?]*)[^(?:\()(?: \w)]/
+VALID_NAME=/[a-zA-Z][\w\?\!]*/
+VARIABLE_DEFINITION=/(#{VALID_NAME})[^(?:\()(?: \w)]/
 
 module Rfactor
   class Code
@@ -81,10 +82,17 @@ module Rfactor
     end
     
     def extract_parameters(method_contents)
-      all_variables = method_contents.gsub(/".*"/, "").scan(VARIABLE_DEFINITION).flatten
+      all_variables = remove_constants(method_contents).scan(VARIABLE_DEFINITION).flatten
       all_variables.reject do |variable|
         method_contents.match(/^\s*#{variable}\s*=/)
       end
+    end
+    
+    def remove_constants(code)
+      symbolless_code = code.gsub(/:#{VALID_NAME}/, "")
+      regexless_code = symbolless_code.gsub(/\/([^\/\\]|\\.)*\//, "")
+      literal_stringless_code = regexless_code.gsub(/'([^'\\]|\\.)*'/, "")
+      literal_stringless_code.gsub(/"([^"\\]|\\.)*"/, "")
     end
     
     def add_identation(identation, code)
