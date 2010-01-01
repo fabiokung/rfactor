@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper.rb'
 
 NO_PARAMETER_CODE="""
 class Example
-  def long_method()
+  def long_method
     puts \"This is a long method\"
     puts \"used to print a message\"
     puts \"saying this is a long method\"
@@ -12,7 +12,7 @@ end"""
 
 SIMPLE_PARAMETER_CODE="""
 class Example
-  def long_method()
+  def long_method
     first_message = \"This is a long method\"
     puts first_message
     second_message = \"used to print a message\"
@@ -56,11 +56,11 @@ describe Rfactor::Code do
     new_code = rfactor.extract_method(:name => "print", :start => 3, :end => 5)
     new_code.should == """
       def the_method(firstArg, secondArg)
-        print()
+        print
         puts 'refactored'
       end
 
-      def print()
+      def print
         puts \"some\"
         puts :code
         puts /to be/
@@ -69,7 +69,7 @@ describe Rfactor::Code do
   
   it "should extract method and adjust identation even if it is highly idented" do
     rfactor = Rfactor::Code.new("""
-      def the_method()
+      def the_method
         stop = false
         while not stop
           if not stop
@@ -79,16 +79,16 @@ describe Rfactor::Code do
       end""")
     new_code = rfactor.extract_method(:name => "stop?", :start => 6, :end => 6)
     new_code.should == """
-      def the_method()
+      def the_method
         stop = false
         while not stop
           if not stop
-            stop = stop?()
+            stop = stop?
           end
         end
       end
 
-      def stop?()
+      def stop?
         stop = true
       end"""
   end
@@ -102,14 +102,14 @@ describe Rfactor::Code do
       new_code = @rfactor.extract_method({:name => "print_description", :start => 4, :end => 4})
       new_code.should == """
 class Example
-  def long_method()
-    print_description()
+  def long_method
+    print_description
     puts \"used to print a message\"
     puts \"saying this is a long method\"
     puts \"but does nothing useful\"
   end
 
-  def print_description()
+  def print_description
     puts \"This is a long method\"
   end
 end"""
@@ -119,14 +119,14 @@ end"""
       new_code = @rfactor.extract_method({:name => "print_motive", :start => 5, :end => 5})
       new_code.should == """
 class Example
-  def long_method()
+  def long_method
     puts \"This is a long method\"
-    print_motive()
+    print_motive
     puts \"saying this is a long method\"
     puts \"but does nothing useful\"
   end
 
-  def print_motive()
+  def print_motive
     puts \"used to print a message\"
   end
 end"""
@@ -136,11 +136,11 @@ end"""
       new_code = @rfactor.extract_method({:name => "print_message", :start => 4, :end => 7})
       new_code.should == """
 class Example
-  def long_method()
-    print_message()
+  def long_method
+    print_message
   end
 
-  def print_message()
+  def print_message
     puts \"This is a long method\"
     puts \"used to print a message\"
     puts \"saying this is a long method\"
@@ -152,7 +152,7 @@ end"""
     it "should extract the whole method without parameters for literal strings, regexs and symbols" do
       rfactor = Rfactor::Code.new("""
 class Example
-  def long_method()
+  def long_method
     puts \"This is a long method\"
     puts 'used to print a message'
     puts /saying this is a long method/
@@ -162,11 +162,11 @@ end""")
       new_code = rfactor.extract_method({:name => "print_message", :start => 4, :end => 7})
       new_code.should == """
 class Example
-  def long_method()
-    print_message()
+  def long_method
+    print_message
   end
 
-  def print_message()
+  def print_message
     puts \"This is a long method\"
     puts 'used to print a message'
     puts /saying this is a long method/
@@ -178,7 +178,7 @@ end"""
     it "should ignore constants such as literal strings, strings, regexs, symbols and boolean values" do
       rfactor = Rfactor::Code.new("""
 class Example
-  def long_method()
+  def long_method
     puts \"This is a long method\"
     puts /saying this is a long method/
     puts :but_does_nothing_useful
@@ -190,11 +190,11 @@ end""")
       new_code = rfactor.extract_method({:name => "print_message", :start => 4, :end => 9})
       new_code.should == """
 class Example
-  def long_method()
-    print_message()
+  def long_method
+    print_message
   end
 
-  def print_message()
+  def print_message
     puts \"This is a long method\"
     puts /saying this is a long method/
     puts :but_does_nothing_useful
@@ -216,7 +216,7 @@ end"""
         new_code = @rfactor.extract_method({:name => "print_description", :start => 5, :end => 5})
         new_code.should == """
 class Example
-  def long_method()
+  def long_method
     first_message = \"This is a long method\"
     print_description(first_message)
     second_message = \"used to print a message\"
@@ -236,8 +236,8 @@ end"""
         new_code = @rfactor.extract_method({:name => "print_description", :start => 4, :end => 5})
         new_code.should == """
 class Example
-  def long_method()
-    print_description()
+  def long_method
+    print_description
     second_message = \"used to print a message\"
     third_message = \"saying this is a long method\"
     puts second_message
@@ -245,7 +245,7 @@ class Example
     puts \"but does nothing useful\"
   end
 
-  def print_description()
+  def print_description
     first_message = \"This is a long method\"
     puts first_message
   end
@@ -256,15 +256,15 @@ end"""
         new_code = @rfactor.extract_method({:name => "print_description", :start => 4, :end => 6})
         new_code.should == """
 class Example
-  def long_method()
-    second_message = print_description()
+  def long_method
+    second_message = print_description
     third_message = \"saying this is a long method\"
     puts second_message
     puts third_message
     puts \"but does nothing useful\"
   end
 
-  def print_description()
+  def print_description
     first_message = \"This is a long method\"
     puts first_message
     second_message = \"used to print a message\"
@@ -298,7 +298,7 @@ end"""
         new_code = @rfactor.extract_method({:name => "print_description", :start => 8, :end => 9})
         new_code.should == """
 class Example
-  def long_method()
+  def long_method
     first_message = \"This is a long method\"
     puts first_message
     second_message = \"used to print a message\"

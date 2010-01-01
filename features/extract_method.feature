@@ -20,10 +20,10 @@ Feature: Extract Method
       """
         def the_method(firstArg, secondArg)
           puts "some"
-          other_method()
+          other_method
         end
 
-        def other_method()
+        def other_method
           puts :code
           puts /to be/
           puts 'refactored'
@@ -52,10 +52,10 @@ Feature: Extract Method
       """
         def the_method(firstArg, secondArg)
           puts :code
-          new_method()
+          new_method
         end
 
-        def new_method()
+        def new_method
           puts /to be/
           puts 'refactored'
         end

@@ -26,7 +26,8 @@ module Rfactor
       selected_lines = Range.new(args[:start], args[:end])
       method_contents = extract_method_contents(selected_lines)
       parameters = extract_parameters(method_contents)
-      method_call = "#{args[:name]}(#{parameters.join(', ')})"
+      method_call = "#{args[:name]}"
+      method_call += "(#{parameters.join(', ')})" unless parameters.empty?
       
       new_code = ""
       
