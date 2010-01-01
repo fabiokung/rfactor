@@ -3,12 +3,12 @@ VARIABLE_DEFINITION=/(#{VALID_NAME})[^(?:\()(?: \w)]/
 
 module Rfactor
   class Code
-    ### code: String with code to be refactored
+    ##### code: String with code to be refactored
     def initialize(code)
       @code = code
     end
     
-    ### == Required arguments
+    ##### == Required arguments
     #
     # You must pass them inside a Hash:
     #
@@ -29,30 +29,34 @@ module Rfactor
       method_call = "#{args[:name]}(#{parameters.join(', ')})"
       
       new_code = ""
-      identation = ""
       
       @code.each_with_index do |line, n|
-        line_number = n + 1 ### not 0-based
-        if line_number == method_lines.first
-          identation = extract_identation_level_from line
-        end
+        line_number = n + 1 ##### not 0-based
         if line_number == selected_lines.first
-          new_code << "#{identation}  "
-          
-          last_instruction = method_contents.split("\n")[-1]
-          is_assignment = remove_constants(last_instruction).match(/\s*(#{VALID_NAME})\s*=/)
-          new_code << "#{$1} = " if is_assignment
-          
+          call_identation = extract_identation_level_from line
+          new_code << call_identation
+          return_value = assignment_value(method_contents)
+          new_code << "#{return_value} = " unless return_value.nil?
           new_code << "#{method_call}\n"
+          method_contents.gsub!(/^#{call_identation}/, "")
         elsif line_number == method_lines.last
-          new_code << "#{identation}end\n\n#{identation}def #{method_call}\n#{method_contents}"
+          method_identation = extract_identation_level_from line
+          new_code << "#{method_identation}end\n"
+          new_code << "\n#{method_identation}def #{method_call}\n"
+          new_code << ident(method_contents, method_identation+"  ")
         end
           
         new_code << line unless selected_lines.include? line_number
       end
       new_code
     end
-    
+
+    def assignment_value(method_contents)
+      last_instruction = method_contents.split("\n")[-1]
+      is_assignment = remove_constants(last_instruction).match(/\s*(#{VALID_NAME})\s*=/)
+      $1
+    end
+        
     private
     def raise_error_if_absent(arguments, keys)
       keys.each do |key|
@@ -69,14 +73,14 @@ module Rfactor
     def extract_method_contents(selected_lines)
       method_contents = ""
       @code.each_with_index do |line, n|
-        line_number = n + 1 # not 0-based
+        line_number = n + 1 ### not 0-based
         method_contents << line if selected_lines.include? line_number
       end
       method_contents
     end
     
     def extract_identation_level_from(line)
-      spaces = line.match /^(\s*)def/
+      spaces = line.match /^(\s*)\w/
       spaces.captures[0]
     end
     
@@ -91,12 +95,16 @@ module Rfactor
       symbolless_code = code.gsub(/:#{VALID_NAME}/, "")
       regexless_code = symbolless_code.gsub(/\/([^\/\\]|\\.)*\//, "")
       literal_stringless_code = regexless_code.gsub(/'([^'\\]|\\.)*'/, "")
-      literal_stringless_code.gsub(/"([^"\\]|\\.)*"/, "")
+      parsed_stringless_code = literal_stringless_code.gsub(/"([^"\\]|\\.)*"/, "")
+      parsed_stringless_code.gsub(/(true)|(false)/, "")
     end
     
-    def add_identation(identation, code)
-      code.gsub(/\n/, "\n#{identation}")
+    def ident(code, identation)
+      idented_code = code.split("\n").map{|line| identation+line}.join("\n")
+      idented_code += "\n" if code[-1] == "\n"[0]
     end
   end
 end
+
+
 

@@ -67,6 +67,32 @@ describe Rfactor::Code do
       end"""
   end
   
+  it "should extract method and adjust identation even if it is highly idented" do
+    rfactor = Rfactor::Code.new("""
+      def the_method()
+        stop = false
+        while not stop
+          if not stop
+            stop = true
+          end
+        end
+      end""")
+    new_code = rfactor.extract_method(:name => "stop?", :start => 6, :end => 6)
+    new_code.should == """
+      def the_method()
+        stop = false
+        while not stop
+          if not stop
+            stop = stop?()
+          end
+        end
+      end
+
+      def stop?()
+        stop = true
+      end"""
+  end
+  
   context "no parameters method extraction" do
     before(:each) do
       @rfactor = Rfactor::Code.new(NO_PARAMETER_CODE)
@@ -149,7 +175,7 @@ class Example
 end"""
     end
     
-    it "should ignore constants such as literal strings, strings, regexs and symbols" do
+    it "should ignore constants such as literal strings, strings, regexs, symbols and boolean values" do
       rfactor = Rfactor::Code.new("""
 class Example
   def long_method()
@@ -157,9 +183,11 @@ class Example
     puts /saying this is a long method/
     puts :but_does_nothing_useful
     puts 'used to = print a message'
+    puts true
+    puts false
   end
 end""")
-      new_code = rfactor.extract_method({:name => "print_message", :start => 4, :end => 7})
+      new_code = rfactor.extract_method({:name => "print_message", :start => 4, :end => 9})
       new_code.should == """
 class Example
   def long_method()
@@ -171,6 +199,8 @@ class Example
     puts /saying this is a long method/
     puts :but_does_nothing_useful
     puts 'used to = print a message'
+    puts true
+    puts false
   end
 end"""
     end
@@ -240,7 +270,29 @@ class Example
     second_message = \"used to print a message\"
   end
 end"""
-      end   
+      end
+      
+      it "should extract parameter from complex code" do
+        rfactor = Rfactor::Code.new("""
+        def extract_method
+          last_instruction = method_contents.split(\"\\n\")[-1]
+          is_assignment = remove_constants(last_instruction).match(/\\s*([a-zA-Z][\\w\\?\\!]*)\\s*=/)
+          new_code << \"#{$1} = \" if is_assignment
+        end
+""")
+        new_code = rfactor.extract_method(:name => "last_instruction_is_assignment", :start => 3, :end => 4)
+        new_code.should == """
+        def extract_method
+          is_assignment = last_instruction_is_assignment(method_contents)
+          new_code << \"#{$1} = \" if is_assignment
+        end
+
+        def last_instruction_is_assignment(method_contents)
+          last_instruction = method_contents.split(\"\\n\")[-1]
+          is_assignment = remove_constants(last_instruction).match(/\\s*([a-zA-Z][\\w\\?\\!]*)\\s*=/)
+        end
+"""
+      end
 
       it "should extract the method with more than one parameter" do
         new_code = @rfactor.extract_method({:name => "print_description", :start => 8, :end => 9})
