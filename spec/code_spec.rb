@@ -89,7 +89,7 @@ describe Rfactor::Code do
       end
 
       def stop?
-        stop = true
+        true
       end"""
   end
   
@@ -267,7 +267,7 @@ class Example
   def print_description
     first_message = \"This is a long method\"
     puts first_message
-    second_message = \"used to print a message\"
+    \"used to print a message\"
   end
 end"""
       end
@@ -279,7 +279,7 @@ end"""
           is_assignment = remove_constants(last_instruction).match(/\\s*([a-zA-Z][\\w\\?\\!]*)\\s*=/)
           new_code << \"#{$1} = \" if is_assignment
         end
-""")
+        """)
         new_code = rfactor.extract_method(:name => "last_instruction_is_assignment", :start => 3, :end => 4)
         new_code.should == """
         def extract_method
@@ -289,9 +289,9 @@ end"""
 
         def last_instruction_is_assignment(method_contents)
           last_instruction = method_contents.split(\"\\n\")[-1]
-          is_assignment = remove_constants(last_instruction).match(/\\s*([a-zA-Z][\\w\\?\\!]*)\\s*=/)
+          remove_constants(last_instruction).match(/\\s*([a-zA-Z][\\w\\?\\!]*)\\s*=/)
         end
-"""
+        """
       end
 
       it "should extract the method with more than one parameter" do

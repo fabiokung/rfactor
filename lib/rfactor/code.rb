@@ -36,12 +36,18 @@ module Rfactor
         if line_number == selected_lines.first
           call_identation = extract_identation_level_from line
           new_code << call_identation
+          
           return_value = assignment_value(method_contents)
-          new_code << "#{return_value} = " unless return_value.nil?
+          unless return_value.nil?
+            new_code << "#{return_value} = "
+            method_contents.gsub!(/^(.*)#{return_value}\s*=\s*(.*)$/m, '\1\2')
+          end
+          
           new_code << "#{method_call}\n"
           method_contents.gsub!(/^#{call_identation}/, "")
         elsif line_number == method_lines.last
           method_identation = extract_identation_level_from line
+          # In this order to keep the line break preference
           new_code << "#{method_identation}end\n"
           new_code << "\n#{method_identation}def #{method_call}\n"
           new_code << ident(method_contents, method_identation+"  ")
@@ -103,6 +109,7 @@ module Rfactor
     def ident(code, identation)
       idented_code = code.split("\n").map{|line| identation+line}.join("\n")
       idented_code += "\n" if code[-1] == "\n"[0]
+      idented_code
     end
   end
 end
