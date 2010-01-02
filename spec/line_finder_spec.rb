@@ -8,6 +8,10 @@ class Bla
     3+2
   end
   
+  def self.my_class_method
+    puts "everything"
+  end
+
   def my_other_method
     puts "anything"
   end
@@ -30,7 +34,14 @@ describe Rfactor::LineFinder do
   end
   
   it "it should find method end line even if the method is the last" do
+    @finder.method_lines(13).last.should == 14
+  end
+
+  it "should find a class method start line" do
+    @finder.method_lines(9).first.should == 8
+  end
+
+  it "should find a class method end line" do
     @finder.method_lines(9).last.should == 10
   end
-  
 end
