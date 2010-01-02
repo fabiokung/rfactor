@@ -1,7 +1,5 @@
 module Rfactor
-
   class LineFinder
-    
     def initialize(ast)
       @ast = ast
     end
@@ -33,7 +31,15 @@ module Rfactor
         @last_method_line = exp.endline
       end
       exp
-    end    
+    end
+    
+    def process_defs(exp)
+      current = exp.line
+      if current > @method_line && current < @line
+        @method_line = current
+        @last_method_line = exp.last.line
+      end
+      exp
+    end
   end
-
 end

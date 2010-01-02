@@ -33,6 +33,10 @@ describe Rfactor::LineFinder do
     @finder.method_lines(3).last.should == 6
   end
   
+  it "it should find method end line even if the method is the last" do
+    @finder.method_lines(13).last.should == 14
+  end
+
   it "should find a class method start line" do
     @finder.method_lines(9).first.should == 8
   end
@@ -40,9 +44,4 @@ describe Rfactor::LineFinder do
   it "should find a class method end line" do
     @finder.method_lines(9).last.should == 10
   end
-  
-  it "it should find method end line even if the method is the last" do
-    @finder.method_lines(13).last.should == 14
-  end
-
 end
