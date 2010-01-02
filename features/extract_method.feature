@@ -28,7 +28,6 @@ Feature: Extract Method
           puts /to be/
           puts 'refactored'
         end
-      
       """
 
   Scenario: Simple code, no variables, many methods

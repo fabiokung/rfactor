@@ -1,11 +1,14 @@
 %w[rubygems rake rake/clean fileutils newgem rubigen].each { |f| require f }
 require File.dirname(__FILE__) + '/lib/rfactor'
+require 'hoe'
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.new('rfactor', Rfactor::VERSION) do |p|
+$hoe = Hoe.spec('rfactor') do |p|
   p.developer('Fabio Kung', 'fabio.kung@gmail.com')
+  p.developer('Hugo Corbucci', 'hugo.corbucci@gmail.com')
   p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
+  p.readme_file          = 'README.rdoc'
   p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
   p.rubyforge_name       = p.name # TODO this is default value
   p.extra_deps         = [
@@ -19,6 +22,7 @@ $hoe = Hoe.new('rfactor', Rfactor::VERSION) do |p|
   path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
   p.remote_rdoc_dir = File.join(path.gsub(/^#{p.rubyforge_name}\/?/,''), 'rdoc')
   p.rsync_args = '-av --delete --ignore-errors'
+  p.summary = "Common refactorings for Ruby code, written in Ruby"
 end
 
 require 'newgem/tasks' # load /tasks/*.rake

@@ -12,16 +12,11 @@ Given %r{^a safe folder} do
   FileUtils.mkdir_p @tmp_root
   FileUtils.mkdir_p @home_path = File.expand_path(File.join(@tmp_root, "home"))
   @lib_path = File.expand_path(File.dirname(__FILE__) + '/../../lib')
-  Given "env variable $HOME set to '#{@home_path}'"
 end
 
 Given %r{^this project is active project folder} do
   Given "a safe folder"
   @active_project_folder = File.expand_path(File.dirname(__FILE__) + "/../..")
-end
-
-Given %r{^env variable \$([\w_]+) set to '(.*)'} do |env_var, value|
-  ENV[env_var] = value
 end
 
 def force_local_lib_override(project_name = @project_name)
