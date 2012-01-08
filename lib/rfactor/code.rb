@@ -31,8 +31,9 @@ module Rfactor
       
       new_code = ""
       
-      @code.each_with_index do |line, n|
-        line_number = n + 1 ##### not 0-based
+      line_number = 0
+      @code.each do |line|
+        line_number =+ 1
         if line_number == selected_lines.first
           call_identation = extract_identation_level_from line
           new_code << call_identation
