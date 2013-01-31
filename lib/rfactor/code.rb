@@ -31,7 +31,7 @@ module Rfactor
       
       new_code = ""
       
-      @code.each_with_index do |line, n|
+      @code.each_line.with_index do |line, n|
         line_number = n + 1 ##### not 0-based
         if line_number == selected_lines.first
           call_identation = extract_identation_level_from line
@@ -121,7 +121,7 @@ module Rfactor
     
     def extract_method_contents(selected_lines)
       method_contents = ""
-      @code.each_with_index do |line, n|
+      @code.each_line.with_index do |line, n|
         line_number = n + 1 ### not 0-based
         method_contents << line if selected_lines.include? line_number
       end
